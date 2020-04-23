@@ -1444,7 +1444,10 @@ collect_mem() { #? Collect memory information from "/proc/meminfo"
 	#* Get disk information from "df" command
 	local df_array df_line line_array
 	unset 'disks_free[@]' 'disks_total[@]' 'disks_name[@]' 'disks_free_percent[@]'
-	readarray -t df_array < <(df -x squashfs -x tmpfs -x devtmpfs -x overlay)
+	readarray -t df_array < <(
+            df -x ecryptfs -x squashfs -x tmpfs -x devtmpfs -x overlay --local \
+                | grep -v '/boot'
+        )
 	for df_line in "${df_array[@]:1}"; do
 		line_array=(${df_line})
 
